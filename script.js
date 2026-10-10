@@ -2,40 +2,52 @@
    MOBILE NAVIGATION
 ========================================= */
 
-const menuButton = document.getElementById("menuButton");
-const navigation = document.getElementById("navigation");
+const menuButton =
+    document.getElementById("menuButton");
+
+const navigation =
+    document.getElementById("navigation");
+
 
 if (menuButton && navigation) {
 
-    menuButton.addEventListener("click", () => {
+    menuButton.addEventListener(
+        "click",
+        () => {
 
-        const isOpen =
-            navigation.classList.toggle("active");
+            const isOpen =
+                navigation.classList.toggle(
+                    "active"
+                );
 
-        menuButton.setAttribute(
-            "aria-expanded",
-            isOpen
-        );
+            menuButton.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
 
-    });
+        }
+    );
 
 
     navigation
         .querySelectorAll("a")
         .forEach(link => {
 
-            link.addEventListener("click", () => {
+            link.addEventListener(
+                "click",
+                () => {
 
-                navigation.classList.remove(
-                    "active"
-                );
+                    navigation.classList.remove(
+                        "active"
+                    );
 
-                menuButton.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+                    menuButton.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
 
-            });
+                }
+            );
 
         });
 
@@ -47,29 +59,41 @@ if (menuButton && navigation) {
 ========================================= */
 
 const header =
-    document.querySelector(".site-header");
+    document.querySelector(
+        ".site-header"
+    );
+
 
 function updateHeader() {
 
     if (!header) return;
 
+
     if (window.scrollY > 40) {
 
-        header.classList.add("scrolled");
+        header.classList.add(
+            "scrolled"
+        );
 
     } else {
 
-        header.classList.remove("scrolled");
+        header.classList.remove(
+            "scrolled"
+        );
 
     }
 
 }
 
+
 window.addEventListener(
     "scroll",
     updateHeader,
-    { passive: true }
+    {
+        passive: true
+    }
 );
+
 
 updateHeader();
 
@@ -79,94 +103,140 @@ updateHeader();
 ========================================= */
 
 const slides =
-    document.querySelectorAll(".hero-slide");
+    document.querySelectorAll(
+        ".hero-slide"
+    );
+
 
 const previousButton =
-    document.getElementById("heroPrev");
+    document.getElementById(
+        "heroPrev"
+    );
+
 
 const nextButton =
-    document.getElementById("heroNext");
+    document.getElementById(
+        "heroNext"
+    );
+
 
 const currentCounter =
-    document.getElementById("heroCurrent");
+    document.getElementById(
+        "heroCurrent"
+    );
+
 
 const totalCounter =
-    document.getElementById("heroTotal");
+    document.getElementById(
+        "heroTotal"
+    );
 
 
 let currentSlide = 0;
 
-let sliderTimer;
+let sliderTimer = null;
 
 
-/* Set total */
+/* Total slides */
 
 if (totalCounter) {
 
     totalCounter.textContent =
-        String(slides.length).padStart(2, "0");
+        String(
+            slides.length
+        ).padStart(2, "0");
 
 }
 
 
-/* Stop all videos */
+/* =========================================
+   HERO VIDEO CONTROL
+========================================= */
 
 function stopAllHeroVideos() {
 
-    slides.forEach(slide => {
+    slides.forEach(
+        slide => {
 
-        const video =
-            slide.querySelector("video");
+            const video =
+                slide.querySelector(
+                    "video"
+                );
 
-        if (video) {
+
+            if (!video) return;
+
 
             video.pause();
 
-            video.currentTime = 0;
+
+            try {
+
+                video.currentTime = 0;
+
+            } catch (error) {
+
+                // Ignore video reset errors.
+
+            }
 
         }
-
-    });
+    );
 
 }
 
-
-/* Play active video */
 
 function playActiveVideo() {
 
     const activeSlide =
         slides[currentSlide];
 
+
     if (!activeSlide) return;
 
-    const video =
-        activeSlide.querySelector("video");
 
-    if (video) {
+    const video =
+        activeSlide.querySelector(
+            "video"
+        );
+
+
+    if (!video) return;
+
+
+    try {
 
         video.currentTime = 0;
 
-        const playPromise =
-            video.play();
+    } catch (error) {
 
-        if (
-            playPromise !== undefined
-        ) {
+        // Ignore reset errors.
 
-            playPromise.catch(() => {
-                // Browser may block autoplay.
-                // Controls remain available.
-            });
+    }
 
-        }
+
+    const playPromise =
+        video.play();
+
+
+    if (
+        playPromise &&
+        typeof playPromise.catch ===
+        "function"
+    ) {
+
+        playPromise.catch(
+            () => { }
+        );
 
     }
 
 }
 
 
-/* Show slide */
+/* =========================================
+   SHOW SLIDE
+========================================= */
 
 function showSlide(index) {
 
@@ -176,27 +246,36 @@ function showSlide(index) {
     stopAllHeroVideos();
 
 
-    slides.forEach(slide => {
+    slides.forEach(
+        slide => {
 
-        slide.classList.remove("active");
+            slide.classList.remove(
+                "active"
+            );
 
-    });
+        }
+    );
 
 
     currentSlide =
-        (index + slides.length)
-        % slides.length;
+        (
+            index +
+            slides.length
+        ) % slides.length;
 
 
     slides[currentSlide]
-        .classList.add("active");
+        .classList.add(
+            "active"
+        );
 
 
     if (currentCounter) {
 
         currentCounter.textContent =
-            String(currentSlide + 1)
-                .padStart(2, "0");
+            String(
+                currentSlide + 1
+            ).padStart(2, "0");
 
     }
 
@@ -206,7 +285,9 @@ function showSlide(index) {
 }
 
 
-/* Next */
+/* =========================================
+   SLIDER NAVIGATION
+========================================= */
 
 function nextSlide() {
 
@@ -219,8 +300,6 @@ function nextSlide() {
 }
 
 
-/* Previous */
-
 function previousSlide() {
 
     showSlide(
@@ -232,8 +311,6 @@ function previousSlide() {
 }
 
 
-/* Buttons */
-
 if (nextButton) {
 
     nextButton.addEventListener(
@@ -242,6 +319,7 @@ if (nextButton) {
     );
 
 }
+
 
 if (previousButton) {
 
@@ -253,18 +331,29 @@ if (previousButton) {
 }
 
 
-/* Automatic slider */
+/* =========================================
+   SLIDER AUTOPLAY
+========================================= */
 
 function startSliderTimer() {
 
-    clearInterval(sliderTimer);
+    clearInterval(
+        sliderTimer
+    );
+
+
+    if (slides.length <= 1) return;
+
 
     sliderTimer =
-        setInterval(() => {
+        setInterval(
+            () => {
 
-            nextSlide();
+                nextSlide();
 
-        }, 3000);
+            },
+            3000
+        );
 
 }
 
@@ -276,23 +365,27 @@ function restartSliderTimer() {
 }
 
 
-/* Pause autoplay when browser tab is hidden */
+/* =========================================
+   VISIBILITY CHANGE
+========================================= */
 
 document.addEventListener(
     "visibilitychange",
     () => {
 
-        if (
-            document.hidden
-        ) {
+        if (document.hidden) {
 
             clearInterval(
                 sliderTimer
             );
 
+            stopAllHeroVideos();
+
         } else {
 
             startSliderTimer();
+
+            playActiveVideo();
 
         }
 
@@ -300,19 +393,54 @@ document.addEventListener(
 );
 
 
-/* Keyboard navigation */
+/* =========================================
+   KEYBOARD NAVIGATION
+========================================= */
 
 document.addEventListener(
     "keydown",
     event => {
 
-        if (event.key === "ArrowRight") {
+        /*
+         Do not change slides when the user
+         is typing inside a form field.
+        */
+
+        const activeElement =
+            document.activeElement;
+
+
+        const isTyping =
+            activeElement &&
+            (
+                activeElement.tagName ===
+                "INPUT" ||
+
+                activeElement.tagName ===
+                "TEXTAREA" ||
+
+                activeElement.tagName ===
+                "SELECT"
+            );
+
+
+        if (isTyping) return;
+
+
+        if (
+            event.key ===
+            "ArrowRight"
+        ) {
 
             nextSlide();
 
         }
 
-        if (event.key === "ArrowLeft") {
+
+        if (
+            event.key ===
+            "ArrowLeft"
+        ) {
 
             previousSlide();
 
@@ -322,7 +450,9 @@ document.addEventListener(
 );
 
 
-/* Start slider */
+/* =========================================
+   START HERO
+========================================= */
 
 if (slides.length) {
 
@@ -334,47 +464,82 @@ if (slides.length) {
 
 
 /* =========================================
-   SCROLL REVEAL ANIMATION
+   SCROLL REVEAL
 ========================================= */
 
 const revealElements =
-    document.querySelectorAll(".reveal");
-
-
-const revealObserver =
-    new IntersectionObserver(
-        entries => {
-
-            entries.forEach(entry => {
-
-                if (
-                    entry.isIntersecting
-                ) {
-
-                    entry.target.classList.add(
-                        "visible"
-                    );
-
-                    revealObserver.unobserve(
-                        entry.target
-                    );
-
-                }
-
-            });
-
-        },
-        {
-            threshold: 0.12
-        }
+    document.querySelectorAll(
+        ".reveal"
     );
 
 
-revealElements.forEach(element => {
+if (
+    "IntersectionObserver"
+    in window
+) {
 
-    revealObserver.observe(element);
+    const revealObserver =
+        new IntersectionObserver(
+            entries => {
 
-});
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            entry.target
+                                .classList
+                                .add(
+                                    "visible"
+                                );
+
+
+                            revealObserver
+                                .unobserve(
+                                    entry.target
+                                );
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold: 0.12
+            }
+        );
+
+
+    revealElements.forEach(
+        element => {
+
+            revealObserver.observe(
+                element
+            );
+
+        }
+    );
+
+} else {
+
+    /*
+       Fallback for older browsers.
+    */
+
+    revealElements.forEach(
+        element => {
+
+            element.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+}
 
 
 /* =========================================
@@ -382,34 +547,65 @@ revealElements.forEach(element => {
 ========================================= */
 
 document
-    .querySelectorAll('a[href^="#"]')
-    .forEach(link => {
+    .querySelectorAll(
+        'a[href^="#"]'
+    )
+    .forEach(
+        link => {
 
-        link.addEventListener(
-            "click",
-            event => {
+            link.addEventListener(
+                "click",
+                event => {
 
-                const targetId =
-                    link.getAttribute("href");
+                    const targetId =
+                        link.getAttribute(
+                            "href"
+                        );
 
-                const target =
-                    document.querySelector(
-                        targetId
-                    );
 
-                if (!target) return;
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
 
-                event.preventDefault();
+                        return;
 
-                target.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
+                    }
 
-            }
-        );
 
-    });
+                    let target = null;
+
+
+                    try {
+
+                        target =
+                            document.querySelector(
+                                targetId
+                            );
+
+                    } catch (error) {
+
+                        return;
+
+                    }
+
+
+                    if (!target) return;
+
+
+                    event.preventDefault();
+
+
+                    target.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+
+                }
+            );
+
+        }
+    );
 
 
 /* =========================================
@@ -422,32 +618,231 @@ const projectVideos =
     );
 
 
-projectVideos.forEach(video => {
+projectVideos.forEach(
+    video => {
 
-    /*
-       When one portfolio video starts,
-       pause the others.
-    */
+        video.addEventListener(
+            "play",
+            () => {
 
-    video.addEventListener(
-        "play",
-        () => {
+                projectVideos.forEach(
+                    otherVideo => {
 
-            projectVideos.forEach(
-                otherVideo => {
+                        if (
+                            otherVideo !==
+                            video
+                        ) {
 
-                    if (
-                        otherVideo !== video
-                    ) {
+                            otherVideo.pause();
 
-                        otherVideo.pause();
+                        }
 
                     }
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================
+   CINEMATIC WORK SECTION
+   MOUSE PARALLAX
+========================================= */
+
+const workSection =
+    document.querySelector(
+        "#work"
+    );
+
+
+if (workSection) {
+
+    const editingBackground =
+        workSection.querySelector(
+            ".editing-background"
+        );
+
+
+    if (editingBackground) {
+
+        let mouseAnimationFrame =
+            null;
+
+
+        workSection.addEventListener(
+            "mousemove",
+            event => {
+
+                /*
+                   Avoid unnecessary calculations
+                   on small screens.
+                */
+
+                if (
+                    window.innerWidth <=
+                    768
+                ) {
+
+                    return;
 
                 }
+
+
+                const rect =
+                    workSection
+                        .getBoundingClientRect();
+
+
+                const x =
+                    (
+                        event.clientX -
+                        rect.left
+                    ) /
+                    rect.width -
+                    0.5;
+
+
+                const y =
+                    (
+                        event.clientY -
+                        rect.top
+                    ) /
+                    rect.height -
+                    0.5;
+
+
+                if (
+                    mouseAnimationFrame
+                ) {
+
+                    cancelAnimationFrame(
+                        mouseAnimationFrame
+                    );
+
+                }
+
+
+                mouseAnimationFrame =
+                    requestAnimationFrame(
+                        () => {
+
+                            editingBackground
+                                .style
+                                .setProperty(
+                                    "--mouse-x",
+                                    `${x * 18}px`
+                                );
+
+
+                            editingBackground
+                                .style
+                                .setProperty(
+                                    "--mouse-y",
+                                    `${y * 18}px`
+                                );
+
+                        }
+                    );
+
+            }
+        );
+
+
+        workSection.addEventListener(
+            "mouseleave",
+            () => {
+
+                editingBackground
+                    .style
+                    .setProperty(
+                        "--mouse-x",
+                        "0px"
+                    );
+
+
+                editingBackground
+                    .style
+                    .setProperty(
+                        "--mouse-y",
+                        "0px"
+                    );
+
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   CLOSE MOBILE NAV WHEN CLICKING OUTSIDE
+========================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (
+            !menuButton ||
+            !navigation
+        ) {
+
+            return;
+
+        }
+
+
+        const clickedInsideMenu =
+            navigation.contains(
+                event.target
+            );
+
+
+        const clickedButton =
+            menuButton.contains(
+                event.target
+            );
+
+
+        if (
+            !clickedInsideMenu &&
+            !clickedButton
+        ) {
+
+            navigation.classList.remove(
+                "active"
+            );
+
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
             );
 
         }
-    );
 
-});
+    }
+);
+
+
+/* =========================================
+   PREVENT HERO SLIDER TIMER FROM RUNNING
+   FOREVER IF PAGE IS NOT VISIBLE
+========================================= */
+
+window.addEventListener(
+    "pagehide",
+    () => {
+
+        clearInterval(
+            sliderTimer
+        );
+
+        stopAllHeroVideos();
+
+    }
+);
