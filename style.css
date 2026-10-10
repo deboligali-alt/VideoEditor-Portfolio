@@ -1734,6 +1734,12 @@ video {
     color: #dfe3ea;
 }
 
+.project-five {
+    background: linear-gradient(135deg,
+            #080808 0%,
+            #315fc2 50%,
+            #111 100%);
+}
 
 /* =========================================
    SERVICES
