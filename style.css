@@ -3630,3 +3630,47 @@ a {
     }
 
 }
+
+.contact-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.contact-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-icon svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.contact-icon span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+/* WhatsApp icon */
+.contact-detail:last-child .contact-icon svg {
+    fill: none;
+    stroke: currentColor;
+}
+
+/* Hover effect */
+.contact-detail:hover .contact-icon svg {
+    transform: scale(1.12);
+}
+
+.contact-icon svg {
+    transition: transform 0.3s ease;
+}
